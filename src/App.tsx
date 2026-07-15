@@ -4,24 +4,19 @@ import './App.scss';
 import usersFromServer from './api/users';
 import todosFromServer from './api/todos';
 import { TodoList } from './components/TodoList/TodoList';
+import { Todo, User } from './components/TodoInfo/TodoInfo';
 
-interface User {
-  id: number;
-  name: string;
-  username: string;
-  email: string;
-}
+const initialTodos: Todo[] = todosFromServer.map(todo => {
+  const user = usersFromServer.find(u => u.id === todo.userId);
 
-interface Todo {
-  id: number;
-  userId: number;
-  title: string;
-  completed: boolean;
-  user: User;
-}
+  return {
+    ...todo,
+    user: user as User,
+  };
+});
 
 export const App = () => {
-  const [todos, setTodos] = useState<Todo[]>(todosFromServer as Todo[]);
+  const [todos, setTodos] = useState<Todo[]>(initialTodos);
   const [title, setTitle] = useState('');
   const [userId, setUserId] = useState('');
 
@@ -32,7 +27,6 @@ export const App = () => {
     let value = e.target.value;
 
     value = value.replace(/[^a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9 ]/g, '');
-
     setTitle(value);
 
     if (titleError) {
@@ -131,7 +125,8 @@ export const App = () => {
         </button>
       </form>
 
-      <TodoList todos={todos} users={usersFromServer} />
+      {/* Теперь передаем только todos */}
+      <TodoList todos={todos} />
     </div>
   );
 };

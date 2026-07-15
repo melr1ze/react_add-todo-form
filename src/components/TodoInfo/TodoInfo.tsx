@@ -1,34 +1,34 @@
 import React from 'react';
 import { UserInfo } from '../UserInfo';
 
-interface User {
+export interface User {
   id: number;
   name: string;
   username: string;
   email: string;
 }
 
-interface Todo {
+export interface Todo {
   id: number;
   title: string;
   completed: boolean;
   userId: number;
+  user: User;
 }
 
 interface Props {
   todo: Todo;
-  user?: User;
 }
 
-export const TodoInfo: React.FC<Props> = ({ todo, user }) => {
+export const TodoInfo: React.FC<Props> = ({ todo }) => {
   return (
     <article
       data-id={todo.id}
       className={`TodoInfo ${todo.completed ? 'TodoInfo--completed' : ''}`}
     >
-      <h2 className="TodoInfo_title">{todo.title}</h2>
+      <h2 className="TodoInfo__title">{todo.title}</h2>
 
-      {user && <UserInfo user={user} />}
+      {todo.user && <UserInfo user={todo.user} />}
     </article>
   );
 };
